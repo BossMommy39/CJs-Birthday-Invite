@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Party Invite</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            color: #00ff00;
+            font-family: 'Orbitron', monospace;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .circuit-border {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .circuit-border::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 2px solid #00ff00;
+            background: 
+                linear-gradient(90deg, transparent 0%, transparent 10%, #00ff00 10%, #00ff00 12%, transparent 12%, transparent 20%, #00ff00 20%, #00ff00 22%, transparent 22%, transparent 100%),
+                linear-gradient(0deg, transparent 0%, transparent 10%, #00ff00 10%, #00ff00 12%, transparent 12%, transparent 20%, #00ff00 20%, #00ff00 22%, transparent 22%, transparent 100%);
+            background-size: 40px 40px;
+            opacity: 0.3;
+        }
+
+        .circuit-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .circuit-line {
+            position: absolute;
+            background: #00ff00;
+            opacity: 0.4;
+        }
+
+        .circuit-line.horizontal {
+            height: 2px;
+            width: 60px;
+        }
+
+        .circuit-line.vertical {
+            width: 2px;
+            height: 60px;
+        }
+
+        .circuit-node {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #00ff00;
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+        
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.2;
+            overflow: hidden;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .glitch {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-align: center;
+            margin: 40px 0;
+            position: relative;
+            color: #00ff00;
+            animation: glitch 2s infinite;
+        }
+        
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+        
+        .invite-content {
+            background: rgba(0, 255, 0, 0.05);
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+        
+        .binary-line {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            text-align: center;
+            margin: 10px 0;
+            opacity: 0.7;
+            letter-spacing: 2px;
+        }
+        
+        .party-details {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .detail-line {
+            margin: 15px 0;
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+        
+        .highlight {
+            color: #00ff00;
+            font-weight: 700;
+            text-shadow: 0 0 10px #00ff00;
+        }
+        
+        .age {
+            font-size: 4rem;
+            font-weight: 900;
+            text-align: center;
+            margin: 20px 0;
+            text-shadow: 0 0 20px #00ff00;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .rsvp-section {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .scan-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff00, transparent);
+            animation: scan 3s infinite;
+        }
+        
+        @keyframes scan {
+            0% { top: 0; opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        
+        .footer {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 480px) {
+            .glitch {
+                font-size: 2rem;
+            }
+            .age {
+                font-size: 3rem;
+            }
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="circuit-border">
+        <div class="circuit-lines" id="circuitLines"></div>
+    </div>
+    
+    <div class="matrix-bg" id="matrixBg"></div>
+    
+    <div class="container">
+        <div class="glitch">SYSTEM UPGRADE<br>v13.0</div>
+        
+        <div class="binary-line">01001110 01100101 01110110 01100101 01110010 00100000 01100111 01101111 01101110 01101110 01100001</div>
+        
+        <div class="invite-content">
+            <div class="scan-effect"></div>
+            
+            <div class="party-details">
+                <div class="detail-line"><span class="highlight">CJ'S ACCESS GRANTED</span></div>
+                <div class="age">13</div>
+                <div class="detail-line">BIRTHDAY PROTOCOL INITIATED</div>
+            </div>
+            
+            <div class="binary-line">01100111 01101001 01110110 01100101 00100000 01111001 01101111 01110101 00100000 01110101 01110000</div>
+            
+            <div class="party-details">
+                <div class="detail-line"><span class="highlight">DATE:</span> October 4th, 2025 </div>
+                <div class="detail-line"><span class="highlight">TIME:</span> 2:00pm </div>
+                <div class="detail-line"><span class="highlight">LOCATION:</span> 749 SW Habitat Lane, Palm City, FL 34990</div>
+                <div class="detail-line"><span class="highlight">MISSION:</span> GAMING & CELEBRATION</div>
+            </div>
+            
+            <div class="binary-line">01101110 01100101 01110110 01100101 01110010 00100000 01100111 01101111 01101110 01101110 01100001 00100000 01101100 01100101 01110100 00100000 01111001 01101111 01110101 00100000 01100100 01101111 01110111 01101110</div>
+        </div>
+        
+        <div class="rsvp-section">
+            <div class="detail-line"><span class="highlight">RSVP TO ANN</span></div>
+            <div class="detail-line">352-514-5021</div>
+            <div style="margin-top: 15px; font-size: 0.9rem;">BRING YOUR GAMING DEVICE</div>
+        </div>
+
+        <div class="upload-section" style="background: rgba(0, 255, 0, 0.1); border: 1px solid #00ff00; border-radius: 5px; padding: 20px; text-align: center; margin: 20px 0;">
+            <div class="detail-line"><span class="highlight">PHOTO UPLOAD PROTOCOL</span></div>
+            <div style="margin: 10px 0; font-size: 0.9rem;">Share your party pics after the event!</div>
+            <div style="font-size: 0.8rem; opacity: 0.8;">[UPLOAD LINK WILL BE SENT POST-PARTY]</div>
+        </div>
+        
+        <div class="footer">
+            <div class="binary-line">ACCESS GRANTED • INVITATION DECODED</div>
+        </div>
+    </div>
+
+    <script>
+        // Create circuit board lines and nodes
+        function createCircuitBoard() {
+            const circuitContainer = document.getElementById('circuitLines');
+            const lines = 15;
+            const nodes = 10;
+            
+            // Create horizontal and vertical lines
+            for (let i = 0; i < lines; i++) {
+                const line = document.createElement('div');
+                line.className = `circuit-line ${Math.random() > 0.5 ? 'horizontal' : 'vertical'}`;
+                line.style.top = Math.random() * 100 + '%';
+                line.style.left = Math.random() * 100 + '%';
+                circuitContainer.appendChild(line);
+            }
+            
+            // Create circuit nodes
+            for (let i = 0; i < nodes; i++) {
+                const node = document.createElement('div');
+                node.className = 'circuit-node';
+                node.style.top = Math.random() * 100 + '%';
+                node.style.left = Math.random() * 100 + '%';
+                circuitContainer.appendChild(node);
+            }
+        }
+
+        // Matrix background effect
+        function createMatrix() {
+            const bg = document.getElementById('matrixBg');
+            const binary = '01';
+            let result = '';
+            
+            for (let i = 0; i < 500; i++) {
+                result += binary[Math.floor(Math.random() * binary.length)];
+                if (i % 50 === 0) result += '\n';
+            }
+            
+            bg.textContent = result;
+        }
+        
+        // Initialize everything
+        createCircuitBoard();
+        createMatrix();
+        setInterval(createMatrix, 3000);
+        
+        // Add some interactive glitch effects
+        document.addEventListener('click', function() {
+            document.body.style.animation = 'glitch 0.3s';
+            setTimeout(() => {
+                document.body.style.animation = '';
+            }, 300);
+        });
+    </script>
+</body>
+</html>
